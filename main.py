@@ -1,5 +1,6 @@
 #program so far
 import sys
+from youtube_transcript_api import YouTubeTranscriptApi
 
 def  get_youtube_link():
     youtube_url = input('Enter the YT link')
@@ -34,3 +35,12 @@ def  get_youtube_link():
 
 video_id = get_youtube_link()
 print(video_id)
+
+# implement get transcript from the video usinmg api https://www.youtube.com/watch?v=XZnuIIcc8VY
+ytt_api = YouTubeTranscriptApi()
+fetched_transcript = ytt_api.fetch(video_id)
+print(fetched_transcript)
+final_transcript = ''
+for snippet in fetched_transcript.snippets:
+ final_transcript += ''.join(snippet.text)
+ print(final_transcript)
