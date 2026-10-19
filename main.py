@@ -1,6 +1,10 @@
 #program so far
 import sys
 from youtube_transcript_api import YouTubeTranscriptApi
+from google import genai
+from dotenv import load_dotenv
+load_dotenv()
+client = genai.Client()
 
 def  get_youtube_link():
     youtube_url = input('Enter the YT link')
@@ -43,4 +47,33 @@ print(fetched_transcript)
 final_transcript = ''
 for snippet in fetched_transcript.snippets:
  final_transcript += ''.join(snippet.text)
- print(final_transcript)
+
+# function to call api and create notes
+def generate_notes(transcript):
+    response = client.models.generate_content(
+        model="gemini-3.8-flash",
+        contents = f"""
+        Create structured study notes from the transcript below.
+
+        Include:
+        1. A concise overview
+        2. Topic-wise notes with headings
+        3. Important concepts and examples mentioned
+        4. Key takeaways
+        5. A short summary
+
+        Accuracy rules:
+        - Use only information supported by the transcript.
+        - Do not invent facts, examples, statistics, or quotes.
+        - If something is unclear in the transcript, say so.
+        - Remove unnecessary repetition.
+
+        TRANSCRIPT:
+        {transcript}
+        """
+    )
+    return response.text
+notes = generate_notes(final_transcript)
+with open('notes.md', 'w') as file:
+    file.write(notes)
+print("Notes generated successfully")
