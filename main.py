@@ -74,6 +74,14 @@ def generate_notes(transcript):
     )
     return response.text
 notes = generate_notes(final_transcript)
-with open('notes.md', 'w') as file:
+
+os.makedirs("notes", exists_ok=True)
+
+filename = f'notes-{video_id}.md'
+with open('notes.md', 'w', encoding='utf-8') as file:
     file.write(notes)
-print("Notes generated successfully")
+print(f"Notes saved to {filename}")
+
+#implement file saving logic so it does not get overwritten
+
+    
